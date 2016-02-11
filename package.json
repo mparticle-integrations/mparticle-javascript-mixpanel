@@ -1,0 +1,10 @@
+{
+  "name": "integration-mixpanel",
+  "description": "mParticle integration sdk for Mixpanel",
+  "repository": "https://github.com/mParticle/integration-mixpanel",
+  "devDependencies": {
+    "blanket": "1.1.7",
+    "should": "7.1.0",
+    "mocha": "2.3.2"
+  }
+}
