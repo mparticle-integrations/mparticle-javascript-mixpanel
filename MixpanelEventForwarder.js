@@ -140,9 +140,9 @@
             event.EventAttributes = event.EventAttributes || {};
 
             try {
-                mixpanel.track(['record',
+                mixpanel.track(
                     event.EventName,
-                    event.EventAttributes]);
+                    event.EventAttributes);
             }
             catch(e) {
                 return 'Can\'t log event on forwarder: ' + name + ': ' + e;

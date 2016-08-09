@@ -90,8 +90,8 @@ describe('Mixpanel Forwarder', function () {
 
         this.data = null;
 
-        this.track         = function(data) {
-            setCalledAttributes(data, 'trackCalled');
+        this.track         = function(eventName, data) {
+            setCalledAttributes([eventName, data], 'trackCalled');
         };
 
         this.identify      = function (data) {
@@ -148,15 +148,13 @@ describe('Mixpanel Forwarder', function () {
             });
 
             window.mixpanel.should.have.property('trackCalled', true);
-            window.mixpanel.data.should.be.instanceof(Array).and.have.lengthOf(3);
+            window.mixpanel.data.should.be.instanceof(Array).and.have.lengthOf(2);
 
             window.mixpanel.data[0].should.be.type('string');
-            window.mixpanel.data[1].should.be.type('string');
-            window.mixpanel.data[2].should.be.instanceof(Object);
+            window.mixpanel.data[1].should.be.instanceof(Object);
 
-            window.mixpanel.data[0].should.be.equal('record');
-            window.mixpanel.data[1].should.be.equal('Test Page Event');
-            Should(window.mixpanel.data[2]).eql({});
+            window.mixpanel.data[0].should.be.equal('Test Page Event');
+            Should(window.mixpanel.data[1]).eql({});
 
             done();
         });
