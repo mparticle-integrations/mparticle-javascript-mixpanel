@@ -1,3 +1,4 @@
+/* eslint-disable no-undef*/
 //  Copyright 2015 mParticle, Inc.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,38 +14,39 @@
 //  limitations under the License.
 
 (function (window) {
-    var name    = 'MixpanelEventForwarder',
-    MessageType = {
-        SessionStart: 1,
-        SessionEnd  : 2,
-        PageView    : 3,
-        PageEvent   : 4,
-        CrashReport : 5,
-        OptOut      : 6,
-        Commerce    : 16
-    };
+    var name = 'MixpanelEventForwarder',
+        MessageType = {
+            SessionStart: 1,
+            SessionEnd  : 2,
+            PageView    : 3,
+            PageEvent   : 4,
+            CrashReport : 5,
+            OptOut      : 6,
+            Commerce    : 16
+        };
 
 
     var constructor = function () {
-        var self          = this,
-        isInitialized     = false,
-        forwarderSettings = null,
-        reportingService  = null,
-        isTesting         = false;
+        var self = this,
+            isInitialized = false,
+            forwarderSettings = null,
+            reportingService = null,
+            isTesting = false;
 
         self.name = name;
 
         function initForwarder(settings, service, testMode) {
             forwarderSettings = settings;
-            reportingService  = service;
-            isTesting         = testMode;
+            reportingService = service;
+            isTesting = testMode;
 
             try {
                 if (!testMode) {
+                    /* eslint-disable */
                     (function(e,b){if (!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
                     for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
-
-                    mixpanel.init(settings.token);
+                    /* eslint-enable */
+                    mixpanel.init(settings.token, {}, 'mparticle');
                 }
 
                 isInitialized = true;
@@ -102,10 +104,10 @@
 
             try {
                 if (window.mParticle.IdentityType.Alias == type) {
-                    mixpanel.alias(id.toString());
+                    mixpanel.mparticle.alias(id.toString());
                 }
                 else {
-                    mixpanel.identify(id.toString());
+                    mixpanel.mparticle.identify(id.toString());
                 }
 
                 return 'Successfully called identify on forwarder: ' + name;
@@ -116,11 +118,11 @@
         }
 
         function setUserAttribute(key, value) {
-            var attr  = {};
+            var attr = {};
             attr[key] = value;
 
             try {
-                mixpanel.register(attr);
+                mixpanel.mparticle.register(attr);
             }
             catch(e) {
                 return 'Can\'t call register on forwarder: ' + name + ': ' + e;
@@ -129,7 +131,7 @@
 
         function removeUserAttribute(attribute) {
             try {
-                mixpanel.unregister(attribute);
+                mixpanel.mparticle.unregister(attribute);
             }
             catch(e) {
                 return 'Can\'t call unregister on forwarder: ' + name + ': ' + e;
@@ -140,7 +142,7 @@
             event.EventAttributes = event.EventAttributes || {};
 
             try {
-                mixpanel.track(
+                mixpanel.mparticle.track(
                     event.EventName,
                     event.EventAttributes);
             }
@@ -155,17 +157,17 @@
             }
 
             try {
-                mixpanel.track_charge(event.ProductAction.TotalAmount, {'$time': new Date().toISOString()});
+                mixpanel.mparticle.people.track_charge(event.ProductAction.TotalAmount, {'$time': new Date().toISOString()});
             }
             catch (e) {
                 return 'Can\'t log commerce event on forwarder: ' + name + ': ' + e;
             }
         }
 
-        this.init                = initForwarder;
-        this.process             = processEvent;
-        this.setUserAttribute    = setUserAttribute;
-        this.setUserIdentity     = setUserIdentity;
+        this.init = initForwarder;
+        this.process = processEvent;
+        this.setUserAttribute = setUserAttribute;
+        this.setUserIdentity = setUserIdentity;
         this.removeUserAttribute = removeUserAttribute;
     };
 
