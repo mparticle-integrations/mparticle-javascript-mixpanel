@@ -1,5 +1,5 @@
+/* eslint-disable no-undef*/
 describe('Mixpanel Forwarder', function () {
-
     var ReportingService = function () {
         var self   = this;
         this.id    = null;
@@ -81,46 +81,44 @@ describe('Mixpanel Forwarder', function () {
     reportService = new ReportingService();
 
     function MPMock () {
-        var self          = this;
+        var self = this;
         var calledMethods = ['alias', 'track', 'identify', 'register', 'unregister', 'trackCharge', 'clearCharges'];
-
+        this.mparticle = { people: {}, data: {}};
         for (var i = 0; i < calledMethods.length; i++) {
-            this[calledMethods[i] + 'Called'] = false;
+            this.mparticle[calledMethods[i] + 'Called'] = false;
         }
 
-        this.data = null;
-
-        this.track         = function(eventName, data) {
+        this.mparticle.track = function(eventName, data) {
             setCalledAttributes([eventName, data], 'trackCalled');
         };
 
-        this.identify      = function (data) {
+        this.mparticle.identify = function (data) {
             setCalledAttributes(data, 'identifyCalled');
         };
 
-        this.alias         = function (data) {
+        this.mparticle.alias = function (data) {
             setCalledAttributes(data, 'aliasCalled');
         };
 
-        this.register      = function (data) {
+        this.mparticle.register = function (data) {
             setCalledAttributes(data, 'registerCalled');
         };
 
-        this.unregister    = function (data) {
+        this.mparticle.unregister = function (data) {
             setCalledAttributes(data, 'unregisterCalled');
         };
 
-        this.track_charge  = function (data) {
+        this.mparticle.people.track_charge = function (data) {
             setCalledAttributes(data, 'trackChargeCalled');
         };
 
-        this.clear_charges = function (data) {
+        this.mparticle.people.clear_charges = function (data) {
             setCalledAttributes(data, 'clearChargeCalled');
         };
 
         function setCalledAttributes(data, attr) {
-            self.data  = data;
-            self[attr] = true;
+            self.mparticle.data = data;
+            self.mparticle[attr] = true;
         }
     }
 
@@ -130,9 +128,9 @@ describe('Mixpanel Forwarder', function () {
         }, reportService.cb, true);
 
         mParticle.ProductActionType = ProductActionType;
-        mParticle.EventType         = EventType;
-        mParticle.IdentityType      = IdentityType;
-        mParticle.PromotionType     = PromotionActionType;
+        mParticle.EventType = EventType;
+        mParticle.IdentityType = IdentityType;
+        mParticle.PromotionType = PromotionActionType;
     });
 
     beforeEach(function () {
@@ -140,21 +138,20 @@ describe('Mixpanel Forwarder', function () {
     });
 
     describe('Logging events', function() {
-
         it('should log event', function(done) {
             mParticle.forwarder.process({
                 EventDataType : MessageType.PageEvent,
-                EventName     : 'Test Page Event'
+                EventName : 'Test Page Event'
             });
 
-            window.mixpanel.should.have.property('trackCalled', true);
-            window.mixpanel.data.should.be.instanceof(Array).and.have.lengthOf(2);
+            window.mixpanel.mparticle.should.have.property('trackCalled', true);
+            window.mixpanel.mparticle.data.should.be.instanceof(Array).and.have.lengthOf(2);
 
-            window.mixpanel.data[0].should.be.type('string');
-            window.mixpanel.data[1].should.be.instanceof(Object);
+            window.mixpanel.mparticle.data[0].should.be.type('string');
+            window.mixpanel.mparticle.data[1].should.be.instanceof(Object);
 
-            window.mixpanel.data[0].should.be.equal('Test Page Event');
-            Should(window.mixpanel.data[1]).eql({});
+            window.mixpanel.mparticle.data[0].should.be.equal('Test Page Event');
+            Should(window.mixpanel.mparticle.data[1]).eql({});
 
             done();
         });
@@ -162,35 +159,34 @@ describe('Mixpanel Forwarder', function () {
     });
 
     describe('User events', function() {
-
         it('should alias user', function(done) {
             mParticle.forwarder.setUserIdentity('dpatel@mparticle.com', mParticle.IdentityType.Alias);
-            window.mixpanel.should.have.property('aliasCalled', true);
-            window.mixpanel.should.have.property('data', 'dpatel@mparticle.com');
+            window.mixpanel.mparticle.should.have.property('aliasCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'dpatel@mparticle.com');
 
             done();
         });
 
         it('should identify user', function(done) {
             mParticle.forwarder.setUserIdentity('dpatel@mparticle.com', mParticle.IdentityType.CustomerId);
-            window.mixpanel.should.have.property('identifyCalled', true);
-            window.mixpanel.should.have.property('data', 'dpatel@mparticle.com');
+            window.mixpanel.mparticle.should.have.property('identifyCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'dpatel@mparticle.com');
 
             done();
         });
 
         it('should register a user', function(done) {
             mParticle.forwarder.setUserAttribute('email', 'dpatel@mparticle.com');
-            window.mixpanel.should.have.property('registerCalled', true);
-            window.mixpanel.data.should.be.an.instanceof(Object).and.have.property('email', 'dpatel@mparticle.com');
+            window.mixpanel.mparticle.should.have.property('registerCalled', true);
+            window.mixpanel.mparticle.data.should.be.an.instanceof(Object).and.have.property('email', 'dpatel@mparticle.com');
 
             done();
         });
 
         it('should unregister a user', function(done) {
             mParticle.forwarder.removeUserAttribute('dpatel@mparticle.com');
-            window.mixpanel.should.have.property('unregisterCalled', true);
-            window.mixpanel.should.have.property('data', 'dpatel@mparticle.com');
+            window.mixpanel.mparticle.should.have.property('unregisterCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'dpatel@mparticle.com');
 
             done();
         });
@@ -198,7 +194,6 @@ describe('Mixpanel Forwarder', function () {
     });
 
     describe('Transaction events', function() {
-
         it('should track charge event', function(done) {
             mParticle.forwarder.init({
                 includeUserAttributes: 'True',
@@ -214,15 +209,15 @@ describe('Mixpanel Forwarder', function () {
                 }
             });
 
-            window.mixpanel.should.have.property('trackChargeCalled', true);
-            window.mixpanel.should.have.property('data', 10);
+            window.mixpanel.mparticle.should.have.property('trackChargeCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 10);
 
             done();
         });
 
         it('should enfore useMixpanelPeople to charge', function(done) {
             mParticle.forwarder.init({
-                includeUserAttributes: 'True',
+                includeUserAttributes: 'True'
             }, reportService.cb, true);
 
             mParticle.forwarder.process({
@@ -234,8 +229,8 @@ describe('Mixpanel Forwarder', function () {
                 }
             });
 
-            window.mixpanel.should.have.property('trackChargeCalled', false);
-            window.mixpanel.should.have.property('data', null);
+            window.mixpanel.mparticle.should.have.property('trackChargeCalled', false);
+            window.mixpanel.mparticle.should.have.property('data', {});
 
             done();
         });
