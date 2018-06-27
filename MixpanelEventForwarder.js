@@ -66,9 +66,12 @@
             }
 
             try {
-                if (event.EventDataType == MessageType.PageEvent ||
-                    event.EventDataType == MessageType.PageView) {
-
+                if (event.EventDataType == MessageType.PageEvent) {
+                    reportEvent = true;
+                    logEvent(event);
+                }
+                else if (event.EventDataType == MessageType.PageView) {
+                    event.EventName = 'Viewed ' + event.EventName;
                     reportEvent = true;
                     logEvent(event);
                 }

@@ -156,6 +156,24 @@ describe('Mixpanel Forwarder', function () {
             done();
         });
 
+        it('should log a page view with \'Viewed\' prepended to the event name', function(done) {
+            mParticle.forwarder.process({
+                EventDataType : MessageType.PageView,
+                EventName : 'Test Page Event'
+            });
+
+            window.mixpanel.mparticle.should.have.property('trackCalled', true);
+            window.mixpanel.mparticle.data.should.be.instanceof(Array).and.have.lengthOf(2);
+
+            window.mixpanel.mparticle.data[0].should.be.type('string');
+            window.mixpanel.mparticle.data[1].should.be.instanceof(Object);
+
+            window.mixpanel.mparticle.data[0].should.be.equal('Viewed Test Page Event');
+            Should(window.mixpanel.mparticle.data[1]).eql({});
+
+            done();
+        });
+
     });
 
     describe('User events', function() {
