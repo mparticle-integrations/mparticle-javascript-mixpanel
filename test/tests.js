@@ -151,7 +151,7 @@ describe('Mixpanel Forwarder', function () {
             window.mixpanel.mparticle.data[1].should.be.instanceof(Object);
 
             window.mixpanel.mparticle.data[0].should.be.equal('Test Page Event');
-            Should(window.mixpanel.mparticle.data[1]).eql({});
+            window.mixpanel.mparticle.data[1].should.be.an.Object().and.be.empty();
 
             done();
         });
@@ -169,7 +169,7 @@ describe('Mixpanel Forwarder', function () {
             window.mixpanel.mparticle.data[1].should.be.instanceof(Object);
 
             window.mixpanel.mparticle.data[0].should.be.equal('Viewed Test Page Event');
-            Should(window.mixpanel.mparticle.data[1]).eql({});
+            window.mixpanel.mparticle.data[1].should.be.an.Object().and.be.empty();
 
             done();
         });
