@@ -1,9 +1,15 @@
 {
-  "name": "integration-mixpanel",
+  "name": "@mparticle/web-mixpanel-kit",
+  "version": "2.0.0-rc1",
+  "author": "mParticle Developers <developers@mparticle.com> (https://www.mparticle.com)",
   "description": "mParticle integration sdk for Mixpanel",
-  "repository": "https://github.com/mParticle/integration-mixpanel",
+  "repository": "https://github.com/mparticle-integrations/mparticle-javascript-integration-mixpanel",
   "devDependencies": {
     "should": "13.2.3",
     "mocha": "^5.2.0"
-  }
+  },
+  "dependencies": {
+    "@mparticle/web-sdk": "^2.0.0"
+  },
+  "license": "Apache-2.0"
 }
