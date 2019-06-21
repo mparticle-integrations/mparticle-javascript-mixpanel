@@ -5,6 +5,10 @@
   "description": "mParticle integration sdk for Mixpanel",
   "browser": "dist/MixpanelEventForwarder.js",
   "repository": "https://github.com/mparticle-integrations/mparticle-javascript-integration-mixpanel",
+  "scripts": {
+    "build": "rollup --config rollup.config.js",
+    "watch": "rollup --config rollup.config.js -w"
+  },
   "devDependencies": {
     "blanket": "1.1.7",
     "should": "7.1.0",
