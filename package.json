@@ -3,8 +3,7 @@
   "description": "mParticle integration sdk for Mixpanel",
   "repository": "https://github.com/mParticle/integration-mixpanel",
   "devDependencies": {
-    "blanket": "1.1.7",
-    "should": "7.1.0",
-    "mocha": "2.3.2"
+    "should": "13.2.3",
+    "mocha": "^5.2.0"
   }
 }
