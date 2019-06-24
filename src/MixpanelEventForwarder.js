@@ -126,7 +126,11 @@
             attr[key] = value;
 
             try {
-                mixpanel.mparticle.register(attr);
+                if (forwarderSettings.useMixpanelPeople) {
+                    mixpanel.mparticle.people.set(attr);
+                } else {
+                    mixpanel.mparticle.register(attr);
+                }
             }
             catch(e) {
                 return 'Can\'t call register on forwarder: ' + name + ': ' + e;
@@ -135,7 +139,11 @@
 
         function removeUserAttribute(attribute) {
             try {
-                mixpanel.mparticle.unregister(attribute);
+                if (forwarderSettings.useMixpanelPeople) {
+                    mixpanel.mparticle.people.unset(attribute);
+                } else {
+                    mixpanel.mparticle.unregister(attribute);
+                }
             }
             catch(e) {
                 return 'Can\'t call unregister on forwarder: ' + name + ': ' + e;

@@ -108,6 +108,14 @@ describe('Mixpanel Forwarder', function () {
             setCalledAttributes(data, 'unregisterCalled');
         };
 
+        this.mparticle.people.set = function (data) {
+            setCalledAttributes(data, 'setCalled');
+        };
+
+        this.mparticle.people.unset = function (data) {
+            setCalledAttributes(data, 'unsetCalled');
+        };
+
         this.mparticle.people.track_charge = function (data) {
             setCalledAttributes(data, 'trackChargeCalled');
         };
@@ -151,7 +159,7 @@ describe('Mixpanel Forwarder', function () {
             window.mixpanel.mparticle.data[1].should.be.instanceof(Object);
 
             window.mixpanel.mparticle.data[0].should.be.equal('Test Page Event');
-            Should(window.mixpanel.mparticle.data[1]).eql({});
+            window.mixpanel.mparticle.data[1].should.be.an.Object().and.be.empty();
 
             done();
         });
@@ -169,7 +177,7 @@ describe('Mixpanel Forwarder', function () {
             window.mixpanel.mparticle.data[1].should.be.instanceof(Object);
 
             window.mixpanel.mparticle.data[0].should.be.equal('Viewed Test Page Event');
-            Should(window.mixpanel.mparticle.data[1]).eql({});
+            window.mixpanel.mparticle.data[1].should.be.an.Object().and.be.empty();
 
             done();
         });
@@ -209,6 +217,32 @@ describe('Mixpanel Forwarder', function () {
             done();
         });
 
+    });
+
+    describe('People Properties', function () {
+        it('should set a user property', function(done) {
+            mParticle.forwarder.init({
+                useMixpanelPeople    : 'True'
+            }, reportService.cb, true);
+
+            mParticle.forwarder.setUserAttribute('email', 'dpatel@mparticle.com');
+            window.mixpanel.mparticle.should.have.property('setCalled', true);
+            window.mixpanel.mparticle.data.should.be.an.instanceof(Object).and.have.property('email', 'dpatel@mparticle.com');
+
+            done();
+        });
+
+        it('should unset a user property', function(done) {
+            mParticle.forwarder.init({
+                useMixpanelPeople    : 'True'
+            }, reportService.cb, true)
+
+            mParticle.forwarder.removeUserAttribute('email', 'dpatel@mparticle.com');
+            window.mixpanel.mparticle.should.have.property('unsetCalled', true);
+            window.mixpanel.mparticle.data.should.be.an.instanceof(Object).and.not.have.property('email', 'dpatel@mparticle.com');
+
+            done();
+        });
     });
 
     describe('Transaction events', function() {
