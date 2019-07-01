@@ -3,9 +3,9 @@
   "version": "2.0.1-rc.1",
   "author": "mParticle Developers <developers@mparticle.com> (https://www.mparticle.com)",
   "description": "mParticle integration sdk for Mixpanel",
-  "browser": "npm/MixpanelEventForwarder.js",
+  "browser": "dist/MixpanelEventForwarder.common.js",
   "files": [
-    "npm/MixpanelEventForwarder.js"
+    "dist/MixpanelEventForwarder.common.js"
   ],
   "repository": "https://github.com/mparticle-integrations/mparticle-javascript-integration-mixpanel",
   "scripts": {
