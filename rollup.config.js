@@ -21,7 +21,7 @@ export default [
     {
         input: 'src/MixpanelEventForwarder.js',
         output: {
-            file: 'dist/MixpanelEventForwarder.js',
+            file: 'dist/MixpanelEventForwarder.iife.js',
             format: 'iife',
             exports: 'named',
             name: 'mpMixpanelKit',
@@ -37,7 +37,7 @@ export default [
     {
         input: 'src/MixpanelEventForwarder.js',
         output: {
-            file: 'npm/MixpanelEventForwarder.js',
+            file: 'dist/MixpanelEventForwarder.common.js',
             format: 'cjs',
             exports: 'named',
             name: 'mpMixpanelKit',
