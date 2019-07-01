@@ -1,36 +1,53 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 
-export default [{
-    input: 'src/MixpanelEventForwarder.js',
-    output: {
-        file: 'MixpanelEventForwarder.js',
-       format: 'umd',
-        exports: 'named',
-        name: 'mp-mixpanel-kit',
-        strict: false
+export default [
+    {
+        input: 'src/MixpanelEventForwarder.js',
+        output: {
+            file: 'MixpanelEventForwarder.js',
+            format: 'iife',
+            exports: 'named',
+            name: 'mpMixpanelKit',
+            strict: false
+        },
+        plugins: [
+            resolve({
+                browser: true
+            }),
+            commonjs()
+        ]
     },
-    plugins: [
-        resolve({
-            browser: true
-        }),
-        commonjs()
-    ]
-},
-{
-    input: 'src/MixpanelEventForwarder.js',
-    output: {
-        file: 'dist/MixpanelEventForwarder.js',
-        format: 'umd',
-        exports: 'named',
-        name: 'mp-mixpanel-kit',
-        strict: false
+    {
+        input: 'src/MixpanelEventForwarder.js',
+        output: {
+            file: 'dist/MixpanelEventForwarder.iife.js',
+            format: 'iife',
+            exports: 'named',
+            name: 'mpMixpanelKit',
+            strict: false
+        },
+        plugins: [
+            resolve({
+                browser: true
+            }),
+            commonjs()
+        ]
     },
-    plugins: [
-        resolve({
-            browser: true
-        }),
-        commonjs()
-    ]
-}
-] 
+    {
+        input: 'src/MixpanelEventForwarder.js',
+        output: {
+            file: 'dist/MixpanelEventForwarder.common.js',
+            format: 'cjs',
+            exports: 'named',
+            name: 'mpMixpanelKit',
+            strict: false
+        },
+        plugins: [
+            resolve({
+                browser: true
+            }),
+            commonjs()
+        ]
+    }
+]
