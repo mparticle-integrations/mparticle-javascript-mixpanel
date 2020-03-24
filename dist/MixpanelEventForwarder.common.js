@@ -1,26 +1,5 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
-/*!
- * isobject <https://github.com/jonschlinkert/isobject>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-function isObject(val) {
-  return val != null && typeof val === 'object' && Array.isArray(val) === false;
-}
-
-var isobject = /*#__PURE__*/Object.freeze({
-  'default': isObject
-});
-
-function getCjsExportFromNamespace (n) {
-	return n && n['default'] || n;
-}
-
-var isobject$1 = getCjsExportFromNamespace(isobject);
-
 /* eslint-disable no-undef*/
 //  Copyright 2015 mParticle, Inc.
 //
@@ -35,8 +14,6 @@ var isobject$1 = getCjsExportFromNamespace(isobject);
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-    
-
     var name = 'MixpanelEventForwarder',
         moduleId = 10,
         MessageType = {
@@ -173,7 +150,7 @@ var isobject$1 = getCjsExportFromNamespace(isobject);
             }
 
             if (!isInitialized) {
-                return 'Can\'t call setUserIdentity on forwarder: ' + name + ', not initialized';
+                return 'Can\'t call identify on forwarder: ' + name + ', not initialized';
             }
 
             try {
@@ -259,12 +236,12 @@ var isobject$1 = getCjsExportFromNamespace(isobject);
             return;
         }
 
-        if (!isobject$1(config)) {
+        if (!isObject(config)) {
             window.console.log('\'config\' must be an object. You passed in a ' + typeof config);
             return;
         }
 
-        if (isobject$1(config.kits)) {
+        if (isObject(config.kits)) {
             config.kits[name] = {
                 constructor: constructor
             };
@@ -275,6 +252,10 @@ var isobject$1 = getCjsExportFromNamespace(isobject);
             };
         }
         window.console.log('Successfully registered ' + name + ' to your mParticle configuration');
+    }
+
+    function isObject(val) {
+        return (val != null && typeof val === 'object' && Array.isArray(val) === false);
     }
 
     if (window && window.mParticle && window.mParticle.addForwarder) {

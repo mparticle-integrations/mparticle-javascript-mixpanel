@@ -12,8 +12,6 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-    var isobject = require('isobject');
-
     var name = 'MixpanelEventForwarder',
         moduleId = 10,
         MessageType = {
@@ -152,7 +150,7 @@
             }
 
             if (!isInitialized) {
-                return 'Can\'t call setUserIdentity on forwarder: ' + name + ', not initialized';
+                return 'Can\'t call identify on forwarder: ' + name + ', not initialized';
             }
 
             try {
@@ -238,12 +236,12 @@
             return;
         }
 
-        if (!isobject(config)) {
+        if (!isObject(config)) {
             window.console.log('\'config\' must be an object. You passed in a ' + typeof config);
             return;
         }
 
-        if (isobject(config.kits)) {
+        if (isObject(config.kits)) {
             config.kits[name] = {
                 constructor: constructor
             };
@@ -254,6 +252,10 @@
             };
         }
         window.console.log('Successfully registered ' + name + ' to your mParticle configuration');
+    }
+
+    function isObject(val) {
+        return (val != null && typeof val === 'object' && Array.isArray(val) === false);
     }
 
     if (window && window.mParticle && window.mParticle.addForwarder) {
