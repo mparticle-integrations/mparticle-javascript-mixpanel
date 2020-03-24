@@ -193,10 +193,84 @@ describe('Mixpanel Forwarder', function () {
             done();
         });
 
-        it('should identify user', function(done) {
+        it('should identify user (mParticle SDK v1)', function(done) {
             mParticle.forwarder.setUserIdentity('dpatel@mparticle.com', mParticle.IdentityType.CustomerId);
             window.mixpanel.mparticle.should.have.property('identifyCalled', true);
             window.mixpanel.mparticle.should.have.property('data', 'dpatel@mparticle.com');
+
+            done();
+        });
+
+        it('should identify user (mParticle SDK v2)', function(done) {
+            mParticle.forwarder.init({
+                includeUserAttributes: 'True',
+                userIdentificationType: 'CustomerId'
+            }, reportService.cb, true);
+            var user = {
+                getUserIdentities: function() {
+                    return {
+                        userIdentities: {
+                            customerid: 'cust1',
+                            other: 'other1',
+                            other2: 'other2',
+                            other3: 'other3',
+                            other4: 'other4'
+                        }
+                    };
+                },
+                getMPID: function() {
+                    return 'mpid1';
+                },
+            };
+
+            mParticle.forwarder.onUserIdentified(user);
+            window.mixpanel.mparticle.should.have.property('identifyCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'cust1');
+
+            mParticle.forwarder.init({
+                includeUserAttributes: 'True',
+                userIdentificationType: 'MPID'
+            }, reportService.cb, true);
+
+            mParticle.forwarder.onUserIdentified(user);
+            window.mixpanel.mparticle.should.have.property('identifyCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'mpid1');
+
+            mParticle.forwarder.init({
+                includeUserAttributes: 'True',
+                userIdentificationType: 'Other'
+            }, reportService.cb, true);
+
+            mParticle.forwarder.onUserIdentified(user);
+            window.mixpanel.mparticle.should.have.property('identifyCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'other1');
+
+            mParticle.forwarder.init({
+                includeUserAttributes: 'True',
+                userIdentificationType: 'Other2'
+            }, reportService.cb, true);
+
+            mParticle.forwarder.onUserIdentified(user);
+            window.mixpanel.mparticle.should.have.property('identifyCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'other2');
+
+            mParticle.forwarder.init({
+                includeUserAttributes: 'True',
+                userIdentificationType: 'Other3'
+            }, reportService.cb, true);
+
+            mParticle.forwarder.onUserIdentified(user);
+            window.mixpanel.mparticle.should.have.property('identifyCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'other3');
+
+            mParticle.forwarder.init({
+                includeUserAttributes: 'True',
+                userIdentificationType: 'Other4'
+            }, reportService.cb, true);
+
+            mParticle.forwarder.onUserIdentified(user);
+            window.mixpanel.mparticle.should.have.property('identifyCalled', true);
+            window.mixpanel.mparticle.should.have.property('data', 'other4');
 
             done();
         });

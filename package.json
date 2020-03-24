@@ -1,6 +1,6 @@
 {
   "name": "@mparticle/web-mixpanel-kit",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "mParticle Developers <developers@mparticle.com> (https://www.mparticle.com)",
   "description": "mParticle integration sdk for Mixpanel",
   "browser": "dist/MixpanelEventForwarder.common.js",
@@ -21,8 +21,7 @@
     "rollup-plugin-node-resolve": "^5.0.1"
   },
   "dependencies": {
-    "isobject": "^4.0.0",
-    "@mparticle/web-sdk": "^2.9.4-rc.1"
+    "@mparticle/web-sdk": "^2.11.8"
   },
   "license": "Apache-2.0"
 }
