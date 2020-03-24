@@ -88,7 +88,7 @@ var mpMixpanelKit = (function (exports) {
                   }
                   else if (event.EventDataType == MessageType.Commerce &&
                       event.ProductAction &&
-                      event.ProductAction.ProductActionType == mParticle.ProductActionType.Purchase) {
+                      event.ProductAction.ProductActionType == window.mParticle.ProductActionType.Purchase) {
 
                       reportEvent = true;
                       logCommerceEvent(event);
@@ -108,6 +108,9 @@ var mpMixpanelKit = (function (exports) {
           }
 
           function setUserIdentity(id, type) {
+              if (window.mParticle.getVersion()[0] !== '1') {
+                  return;
+              }
               if (!id) {
                   return 'Can\'t call setUserIdentity on forwarder: ' + name + ' without ID';
               }
@@ -123,6 +126,47 @@ var mpMixpanelKit = (function (exports) {
                   else {
                       mixpanel.mparticle.identify(id.toString());
                   }
+
+                  return 'Successfully called identify on forwarder: ' + name;
+              }
+              catch (e) {
+                  return 'Can\'t call identify on forwarder: ' + name + ': ' + e;
+              }
+          }
+
+          function onUserIdentified(user) {
+              var idForMixpanel;
+              var userIdentities = user.getUserIdentities() ? user.getUserIdentities().userIdentities : {};
+              switch (forwarderSettings.userIdentificationType) {
+                  case 'CustomerId':
+                      idForMixpanel = userIdentities.customerid;
+                      break;
+                  case 'MPID':
+                      idForMixpanel = user.getMPID();
+                      break;
+                  case 'Other':
+                      idForMixpanel = userIdentities.other;
+                      break;
+                  case 'Other2':
+                      idForMixpanel = userIdentities.other2;
+                      break;
+                  case 'Other3':
+                      idForMixpanel = userIdentities.other3;
+                      break;
+                  case 'Other4':
+                      idForMixpanel = userIdentities.other4;
+                      break;
+                  default:
+                      idForMixpanel = userIdentities.customerid;
+                      break;
+              }
+
+              if (!isInitialized) {
+                  return 'Can\'t call setUserIdentity on forwarder: ' + name + ', not initialized';
+              }
+
+              try {
+                  mixpanel.mparticle.identify(idForMixpanel);
 
                   return 'Successfully called identify on forwarder: ' + name;
               }
@@ -190,6 +234,7 @@ var mpMixpanelKit = (function (exports) {
           this.process = processEvent;
           this.setUserAttribute = setUserAttribute;
           this.setUserIdentity = setUserIdentity;
+          this.onUserIdentified = onUserIdentified;
           this.removeUserAttribute = removeUserAttribute;
       };
 
