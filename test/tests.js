@@ -186,6 +186,9 @@ describe('Mixpanel Forwarder', function () {
 
     describe('User events', function() {
         it('should alias user', function(done) {
+            window.mParticle.getVersion = function() {
+                return '1.0.0';
+            }
             mParticle.forwarder.setUserIdentity('dpatel@mparticle.com', mParticle.IdentityType.Alias);
             window.mixpanel.mparticle.should.have.property('aliasCalled', true);
             window.mixpanel.mparticle.should.have.property('data', 'dpatel@mparticle.com');
@@ -194,6 +197,9 @@ describe('Mixpanel Forwarder', function () {
         });
 
         it('should identify user (mParticle SDK v1)', function(done) {
+            window.mParticle.getVersion = function () {
+                return '1.0.0';
+            }
             mParticle.forwarder.setUserIdentity('dpatel@mparticle.com', mParticle.IdentityType.CustomerId);
             window.mixpanel.mparticle.should.have.property('identifyCalled', true);
             window.mixpanel.mparticle.should.have.property('data', 'dpatel@mparticle.com');
