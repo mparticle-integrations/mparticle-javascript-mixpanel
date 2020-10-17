@@ -30,12 +30,14 @@
             isInitialized = false,
             forwarderSettings = null,
             reportingService = null,
+            useMixPanelPeople = false,
             isTesting = false;
 
         self.name = name;
 
         function initForwarder(settings, service, testMode) {
             forwarderSettings = settings;
+            useMixPanelPeople = forwarderSettings.useMixpanelPeople === 'True';
             reportingService = service;
             isTesting = testMode;
 
@@ -168,7 +170,7 @@
             attr[key] = value;
 
             try {
-                if (forwarderSettings.useMixpanelPeople) {
+                if (useMixPanelPeople) {
                     mixpanel.mparticle.people.set(attr);
                 } else {
                     mixpanel.mparticle.register(attr);
@@ -181,7 +183,7 @@
 
         function removeUserAttribute(attribute) {
             try {
-                if (forwarderSettings.useMixpanelPeople) {
+                if (useMixPanelPeople) {
                     mixpanel.mparticle.people.unset(attribute);
                 } else {
                     mixpanel.mparticle.unregister(attribute);
@@ -206,10 +208,10 @@
         }
 
         function logCommerceEvent(event) {
-            if (!forwarderSettings.useMixpanelPeople) {
+            if (!useMixPanelPeople) {
                 return 'Can\'t log commerce event on forwarder: ' + name + ', useMixpanelPeople flag is not set';
             }
-
+            debugger;
             try {
                 mixpanel.mparticle.people.track_charge(event.ProductAction.TotalAmount, {'$time': new Date().toISOString()});
             }
