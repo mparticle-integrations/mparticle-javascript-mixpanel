@@ -211,7 +211,7 @@
             if (!useMixpanelPeople) {
                 return 'Can\'t log commerce event on forwarder: ' + name + ', useMixpanelPeople flag is not set';
             }
-            debugger;
+
             try {
                 mixpanel.mparticle.people.track_charge(event.ProductAction.TotalAmount, {'$time': new Date().toISOString()});
             }
