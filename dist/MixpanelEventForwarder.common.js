@@ -31,12 +31,14 @@ Object.defineProperty(exports, '__esModule', { value: true });
         var self = this,
             isInitialized = false,
             forwarderSettings = null,
-            reportingService = null;
+            reportingService = null,
+            useMixpanelPeople = false;
 
         self.name = name;
 
         function initForwarder(settings, service, testMode) {
             forwarderSettings = settings;
+            useMixpanelPeople = forwarderSettings.useMixpanelPeople === 'True';
             reportingService = service;
 
             try {
@@ -168,7 +170,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
             attr[key] = value;
 
             try {
-                if (forwarderSettings.useMixpanelPeople) {
+                if (useMixpanelPeople) {
                     mixpanel.mparticle.people.set(attr);
                 } else {
                     mixpanel.mparticle.register(attr);
@@ -181,7 +183,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
         function removeUserAttribute(attribute) {
             try {
-                if (forwarderSettings.useMixpanelPeople) {
+                if (useMixpanelPeople) {
                     mixpanel.mparticle.people.unset(attribute);
                 } else {
                     mixpanel.mparticle.unregister(attribute);
@@ -206,7 +208,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
         }
 
         function logCommerceEvent(event) {
-            if (!forwarderSettings.useMixpanelPeople) {
+            if (!useMixpanelPeople) {
                 return 'Can\'t log commerce event on forwarder: ' + name + ', useMixpanelPeople flag is not set';
             }
 
