@@ -5,22 +5,6 @@ export default [
     {
         input: 'src/MixpanelEventForwarder.js',
         output: {
-            file: 'MixpanelEventForwarder.js',
-            format: 'iife',
-            exports: 'named',
-            name: 'mpMixpanelKit',
-            strict: false
-        },
-        plugins: [
-            resolve({
-                browser: true
-            }),
-            commonjs()
-        ]
-    },
-    {
-        input: 'src/MixpanelEventForwarder.js',
-        output: {
             file: 'dist/MixpanelEventForwarder.iife.js',
             format: 'iife',
             exports: 'named',
