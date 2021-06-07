@@ -136,12 +136,21 @@ describe('Mixpanel Forwarder', function () {
             self.mparticle.data = data;
             self.mparticle[attr] = true;
         }
+        this.init = function (token, settings, instance) {
+            self.token = token;
+            self.settings = settings;
+            self.instance = instance;
+        };
     }
+    var API_HOST = 'https://api.mixpanel.com';
 
     before(function () {
+        window.mixpanel = new MPMock();
         mParticle.forwarder.init(
             {
+                token: 'token123',
                 includeUserAttributes: 'True',
+                baseUrl: API_HOST,
             },
             reportService.cb,
             true
@@ -153,8 +162,38 @@ describe('Mixpanel Forwarder', function () {
         mParticle.PromotionType = PromotionActionType;
     });
 
-    beforeEach(function () {
-        window.mixpanel = new MPMock();
+    describe('initialization', function () {
+        it('should pass all include the custom baseUrl', function (done) {
+            window.mixpanel.token = 'token123';
+            window.mixpanel.settings.api_host.should.equal(API_HOST);
+            window.mixpanel.instance.should.equal('mparticle');
+
+            done();
+        });
+
+        it('should log a page view with "Viewed" prepended to the event name', function (done) {
+            mParticle.forwarder.process({
+                EventDataType: MessageType.PageView,
+                EventName: 'Test Page Event',
+            });
+
+            window.mixpanel.mparticle.should.have.property('trackCalled', true);
+            window.mixpanel.mparticle.data.should.be
+                .instanceof(Array)
+                .and.have.lengthOf(2);
+
+            window.mixpanel.mparticle.data[0].should.be.type('string');
+            window.mixpanel.mparticle.data[1].should.be.instanceof(Object);
+
+            window.mixpanel.mparticle.data[0].should.be.equal(
+                'Viewed Test Page Event'
+            );
+            window.mixpanel.mparticle.data[1].should.be.an
+                .Object()
+                .and.be.empty();
+
+            done();
+        });
     });
 
     describe('Logging events', function () {
@@ -466,9 +505,11 @@ describe('Mixpanel Forwarder', function () {
         });
 
         it('should enfore useMixpanelPeople to charge', function (done) {
+            window.mixpanel = new MPMock();
             mParticle.forwarder.init(
                 {
                     includeUserAttributes: 'True',
+                    baseUrl: 'api.mixpanel.com',
                 },
                 reportService.cb,
                 true
